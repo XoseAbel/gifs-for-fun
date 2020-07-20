@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Spinner } from "reactstrap";
-import { getApi } from "../api/getApi";
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Spinner } from 'reactstrap';
+import { getApi } from '../api/getApi';
 
-const GifAreaF = (props) => {
+const GifAreaF = props => {
   const [gifUrls, setGifUrls] = useState();
   const [errorUrls, setErrorUrls] = useState();
   //Ruta: data<[index]<images<original<url
@@ -21,38 +21,42 @@ const GifAreaF = (props) => {
   // }
 
   useEffect(() => {
-    console.log("Hola");
     async function fetchData() {
-      const data = await getApi(props.search);
-      if (data.error === "") {
+      const data = await getApi(props.search, props.page, props.limit);
+      if (data.error === '') {
         setGifUrls(data.arrayUrls);
+        props.setMaxPage(data.pagination.total_count);
       } else {
         setErrorUrls(data.error);
       }
     }
     fetchData();
-  }, [props.search]);
+  }, [props]);
 
   return (
     <div>
       <Container>
         <Row>
           {gifUrls ? (
-            gifUrls.map((value) => {
+            gifUrls.map(value => {
               return (
-                <Col xs="3">
+                <Col xs='3'>
                   <span>
-                    <img className="img-fluid p-1" src={value} alt="gif" />
+                    <img className='img-fluid p-1' src={value} alt='gif' />
                   </span>
                 </Col>
               );
             })
           ) : errorUrls ? (
-            <p>Hay error</p>
+            <img
+              className='img-fluid p-1'
+              src='https://media1.giphy.com/media/1RkDDoIVs3ntm/100w.gif?cid=78e2744eoza6ejfgsprydptep03p7oqp7dkr0g7nzgmfff8b&rid=100w.gif'
+              alt='gif'
+            />
           ) : (
             <span>
               <p>Estamos trabajando en ello</p>
-              <Spinner color="danger" />
+              <Spinner color='danger' />
             </span>
           )}
         </Row>
